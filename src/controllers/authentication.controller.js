@@ -17,9 +17,6 @@ const signIn = async (req, res) => {
         throwError(401, "Incorrect data.")
     }
     if (user.status == 0) throwError(401, "User is disabled.")
-    if (user.status == 1){
-        return res.status(200).send({ message : "User not configured.", data : { userId : user._id } })
-    }
 
     // Create token
     const tokenData = createJWT(user);
