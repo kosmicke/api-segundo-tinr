@@ -17,7 +17,18 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
     
-    let topics = await Topic.find()
+    let topics = await Topic.find().select({
+        _id : true,
+        name : true,
+        desc : true,
+        owner : true,
+        avatar : true,
+        createdAt : true,
+        updatedAt : true,
+    }).populate({
+        path : "owner",
+        select : "_id name nickName email avatar"
+    })
     
     if(!topics || !Array.isArray(topics)){
         topics = []
