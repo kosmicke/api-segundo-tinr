@@ -23,6 +23,10 @@ const list = async (req, res) => {
         desc : true,
         owner : true,
         avatar : true,
+        posts: true,
+        likes: true,
+        postsCount: true,
+        likesCount: true,
         createdAt : true,
         updatedAt : true,
     }).populate({
@@ -33,6 +37,13 @@ const list = async (req, res) => {
     if(!topics || !Array.isArray(topics)){
         topics = []
     }
+
+    topics = topics.map(topic => {
+        topic = topic.toObject()
+        delete topic.likes
+        delete topic.posts
+        return topic
+    })
 
     return res.status(200).send({data : topics})
 }

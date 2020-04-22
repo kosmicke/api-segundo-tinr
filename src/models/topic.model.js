@@ -37,8 +37,17 @@ var schema = new Schema(
         timestamps: {
             createdAt: true,
             updatedAt: true
-        }
-    }
+        },
+        toObject: { virtuals: true }, 
+        toJSON: { virtuals: true } 
+    },
 );
+
+schema.virtual('postsCount').get(function() {
+  return this.posts.length
+});
+schema.virtual('likesCount').get(function() {
+  return this.likes.length
+});
 
 module.exports.Topic = mongoose.model('topic', schema, 'topics');
