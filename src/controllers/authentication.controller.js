@@ -9,7 +9,7 @@ const { throwError } = require('../helpers/errors.helper')
 const signIn = async (req, res) => {
 
     // Getting user from database
-    let user = await User.findOne({ email: req.body.email })
+    let user = await User.findOne({ nickName: req.body.nickName })
 
     // Validating data
     if (!user) throwError(404, "User not found.")
@@ -24,16 +24,24 @@ const signIn = async (req, res) => {
     // Response data
     const data = {
         ...tokenData,
-        login: user.login,
+        user: {
+            name : user.name,
+            nickName : user.nickName,
+            email : user.email
+        }
     }
 
     return res.status(200).send({ data })
 }
 
 const signUp = async (req, res) => {
-    // Getting if email is in use by another user
-    let foundUser = await User.findOne({ email: req.body.email })
-    if(foundUser) throwError(403, `User with email ${req.body.email} already exists.`)
+    // Getting if nickName is in use by another user
+    let foundUserNick = await User.findOne({ nickName: req.body.nickName  })
+    if(foundUserNick) throwError(403, `User with nickName ${req.body.nickName} already exists.`)
+
+    // Getting if nickName is in use by another user
+    let foundUserEmail = await User.findOne({ email: req.body.email  })
+    if(foundUserEmail) throwError(403, `User with email ${req.body.email} already exists.`)
 
     // Creating and saving user
     const user = new User(req.body);
@@ -53,7 +61,6 @@ const createJWT = (user) => {
     // Generating token
     const token = jwtsimple.encode({
         user: user._id,
-        type: user.type,
         exp: expiration,
     }, encryptionKey);
 
@@ -64,15 +71,17 @@ const createJWT = (user) => {
 module.exports = {
     signIn: [
         buildValidation(signIn, [
-            body('email', `Value 'email' is rqeuired.`).exists(),
+            body('nickName', `Value 'nickName' is rqeuired.`).exists(),
             body('password', `Value 'password' is required.`).exists()
         ])
     ],
     signUp: [
         buildValidation(signUp, [
-            body('email', `Value 'email' is rqeuired.`).exists(),
+            body('nickName', `Value 'nickName' is required.`).exists(),
+            body('email', `Value 'email' is required.`).exists(),
             body('password', `Value 'password' is required.`).exists(),
-            body('type', `Value 'type' is required.`).exists()
+            body('name', `Value 'name' is required.`).exists(),
+            body('birthDay', `Value 'birthDay' is required.`).exists()
         ])
     ],
 }

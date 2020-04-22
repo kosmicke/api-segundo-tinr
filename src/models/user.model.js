@@ -3,18 +3,27 @@ var Schema = mongoose.Schema;
 
 var schema = new Schema(
     {
+        nickName: {
+            type: String
+        },
         email: {
             type: String
         },
         password: {
             type: String
         },
-        type : {
-            type: String
-        },
         status : {
             type: Number
-        }
+        },
+        name : {
+            type: String
+        },
+        birthDay : {
+            type : Date
+        },
+        avatar: {
+            type: String
+        },
     },
     {
         timestamps: {
