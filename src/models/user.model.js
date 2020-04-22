@@ -23,7 +23,7 @@ var schema = new Schema(
         },
         avatar: {
             type: String
-        },
+        }
     },
     {
         timestamps: {

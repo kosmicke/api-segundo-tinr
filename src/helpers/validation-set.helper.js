@@ -1,4 +1,4 @@
-const { validationResult, body} = require('express-validator');
+const { validationResult, body, param} = require('express-validator');
 
 const buildValidation = (route, validationSet) => {
     if(!Array.isArray(validationSet)) validationSet = []
@@ -16,5 +16,6 @@ const checkValidation = (req, res, next) => {
 
 module.exports = {
     buildValidation,
-    body
+    body,
+    param
 }
