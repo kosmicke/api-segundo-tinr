@@ -21,7 +21,7 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
 
-    let query = req.quey || {}
+    let query = req.query || {}
     
     let posts = await Post.find(query).select({
         _id : true,
