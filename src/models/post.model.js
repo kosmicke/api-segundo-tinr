@@ -32,8 +32,13 @@ var schema = new Schema(
         timestamps: {
             createdAt: true,
             updatedAt: true
-        }
+        },
+        toObject: { virtuals: true }, 
+        toJSON: { virtuals: true } 
     }
 );
+schema.virtual('likesCount').get(function() {
+    return this.likes.length
+});
 
 module.exports.Post = mongoose.model('post', schema, 'posts');
