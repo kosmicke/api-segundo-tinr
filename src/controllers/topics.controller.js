@@ -1,4 +1,5 @@
 const { Topic } = require("../models/topic.model");
+const { Post } = require("../models/post.model");
 const { User } = require("../models/user.model");
 
 const { body, buildValidation } = require('../helpers/validation-set.helper')
@@ -46,6 +47,25 @@ const list = async (req, res) => {
     })
 
     return res.status(200).send({data : topics})
+}
+
+const getById = async (req, res) => {
+    
+    let topic = await Topic.findById(req.params.id).populate({
+        path : "owner",
+        select : "_id name nickName email avatar"
+    })
+
+    if(!topic) throwError(404, "Topic not found.")
+    topic = topic.toObject()
+
+    let posts = await Post.find({topic : topic._id}).populate({
+        path : "owner",
+        select : "_id name nickName email avatar"
+    })
+    topic.posts = posts || []
+
+    return res.status(200).send({data : topic})
 }
 
 const remove = async (req, res) => {
@@ -129,5 +149,6 @@ module.exports = {
     remove,
     edit,
     like,
-    getLikes
+    getLikes,
+    getById
 }

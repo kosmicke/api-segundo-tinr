@@ -7,6 +7,7 @@ module.exports = (app) => {
         .get(topicsController.list)
 
     app.route('/topics/:id')
+        .get(topicsController.getById)
         .put(topicsController.edit)
         .delete(topicsController.remove)
 
