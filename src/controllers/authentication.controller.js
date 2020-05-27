@@ -68,6 +68,27 @@ const createJWT = (user) => {
     return { token: token, token_exp: moment.unix(expiration).utc().format() }
 }
 
+const authorize = async (req, res, next) => {
+    
+    var token = req.headers.authorization;
+    if(!token) return throwError(403, 'Nenhum token foi enviado.')
+    
+    var decoded = null
+    try {
+        token = token.split("Bearer ")[1]
+        decoded = jwtsimple.decode(token, encryptionKey);
+    } catch (error) {
+        throwError(403, 'Token inválido')
+    }
+
+    if (decoded == null) {
+        return throwError(403, 'Token inválido')
+    }
+
+    req.loggedUser = decoded
+    next();
+}
+
 module.exports = {
     signIn: [
         buildValidation(signIn, [
@@ -84,4 +105,5 @@ module.exports = {
             body('birthDay', `Value 'birthDay' is required.`).exists()
         ])
     ],
+    authorize
 }

@@ -1,9 +1,10 @@
 const postsController = require("../controllers/posts.controller")
+const { authorize } = require("../controllers/authentication.controller")
 
 module.exports = (app) => {
     
     app.route('/posts')
-        .post(postsController.create)
+        .post(authorize, postsController.create)
         .get(postsController.list)
 
     app.route('/posts/:id')
